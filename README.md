@@ -32,11 +32,13 @@ A small NAS-friendly Python server that watches a download folder and moves file
      ```
 
 2. Install dependencies
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. Start the server
+
    ```bash
    python main.py
    ```
@@ -64,6 +66,7 @@ Rules are evaluated in the order you define them. If no rule matches, the file i
 The app stores its settings in `config.json`.
 
 You can configure:
+
 - Download folder
 - Sort delay in seconds
 - Rules with Name / Match / Target
@@ -92,6 +95,7 @@ curl http://localhost:8000/api/status
 This project is intended to be run as a lightweight service on a NAS or similar headless environment.
 
 Useful notes:
+
 - The app defaults to no auto-reload to avoid confusion with watcher behavior.
 - To enable reload during development, set:
   ```bash
