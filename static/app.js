@@ -110,8 +110,12 @@ document.getElementById("rules").addEventListener("click", (event) => {
   const button = event.target.closest("button[data-remove]");
   if (button) {
     const index = Number(button.getAttribute("data-remove"));
-    state.config.rules.splice(index, 1);
-    renderRules();
+    const rule = state.config.rules[index];
+    const label = rule && rule.name ? rule.name : `rule ${index + 1}`;
+    if (window.confirm(`Remove ${label}?`)) {
+      state.config.rules.splice(index, 1);
+      renderRules();
+    }
   }
 });
 
