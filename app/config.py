@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.json"
 
@@ -47,7 +47,7 @@ class AppConfig:
         return config
 
 
-def load_config(path: Path | None = None) -> AppConfig:
+def load_config(path: Optional[Path] = None) -> AppConfig:
     config_path = path or CONFIG_PATH
     if config_path.exists():
         with config_path.open("r", encoding="utf-8") as handle:
@@ -55,7 +55,7 @@ def load_config(path: Path | None = None) -> AppConfig:
     return AppConfig()
 
 
-def save_config(config: AppConfig, path: Path | None = None) -> None:
+def save_config(config: AppConfig, path: Optional[Path] = None) -> None:
     config_path = path or CONFIG_PATH
     with config_path.open("w", encoding="utf-8") as handle:
         json.dump(config.to_dict(), handle, indent=2)
