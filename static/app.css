@@ -46,7 +46,7 @@ button.secondary {
 }
 .rule {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 2.2fr) auto;
   gap: 0.6rem;
   margin-bottom: 0.8rem;
   align-items: end;
