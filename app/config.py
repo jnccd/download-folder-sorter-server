@@ -24,6 +24,7 @@ class AppConfig:
         self.download_folder: str = ""
         self.sort_delay_seconds: int = 3
         self.rules: List[MatchRule] = []
+        self.blacklisted_files: List[str] = []
         self.last_error: str = ""
         self.last_run: str = ""
 
@@ -32,6 +33,7 @@ class AppConfig:
             "download_folder": self.download_folder,
             "sort_delay_seconds": self.sort_delay_seconds,
             "rules": [rule.to_dict() for rule in self.rules],
+            "blacklisted_files": self.blacklisted_files,
             "last_error": self.last_error,
             "last_run": self.last_run,
         }
@@ -42,6 +44,7 @@ class AppConfig:
         config.download_folder = payload.get("download_folder", "")
         config.sort_delay_seconds = int(payload.get("sort_delay_seconds", 3))
         config.rules = [MatchRule.from_dict(item) for item in payload.get("rules", [])]
+        config.blacklisted_files = [str(item) for item in payload.get("blacklisted_files", [])]
         config.last_error = payload.get("last_error", "")
         config.last_run = payload.get("last_run", "")
         return config

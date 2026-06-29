@@ -96,12 +96,35 @@ class SorterService:
         try:
             files = sorted(p for p in download_dir.iterdir() if p.is_file())
             for path in files:
+                if self._is_blacklisted(path):
+                    continue
                 if path.name.endswith((".part", ".crdownload", ".tmp", ".download", ".opdownload")):
                     continue
                 with self._lock:
                     self._sort_file(path)
         finally:
             self.status = "idle"
+
+    def _is_blacklisted(self, path: Path) -> bool:
+        if not self.config.blacklisted_files:
+            return False
+        name = path.name.lower()
+        for pattern in self.config.blacklisted_files:
+            if not pattern:
+                continue
+            normalized = pattern.strip().lower()
+            if normalized.startswith("*") and normalized.endswith("*"):
+                if normalized[1:-1] in name:
+                    return True
+            elif normalized.startswith("*"):
+                if name.endswith(normalized[1:]):
+                    return True
+            elif normalized.endswith("*"):
+                if name.startswith(normalized[:-1]):
+                    return True
+            elif normalized == name:
+                return True
+        return False
 
     def _sort_file(self, path: Path) -> None:
         if not path.exists():

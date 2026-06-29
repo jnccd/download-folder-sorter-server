@@ -23,7 +23,8 @@ label {
   margin-bottom: 0.9rem;
   font-weight: 600;
 }
-input {
+input,
+textarea {
   display: block;
   width: 100%;
   margin-top: 0.35rem;
@@ -31,6 +32,10 @@ input {
   border-radius: 6px;
   border: 1px solid #cbd5e1;
   box-sizing: border-box;
+}
+textarea {
+  resize: vertical;
+  min-height: 5rem;
 }
 button {
   margin-right: 0.5rem;

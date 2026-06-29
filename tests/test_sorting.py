@@ -1,8 +1,10 @@
+import asyncio
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
 
+import main as main_module
 from app.config import AppConfig, MatchRule
 from app.matcher import matches_rule
 from app.sorter import SorterService
@@ -38,6 +40,15 @@ class SortingTests(unittest.TestCase):
 
         self.assertFalse(sample.exists())
         self.assertTrue((self.target_dir / "photo.png").exists())
+
+    def test_update_config_persists_blacklisted_files(self) -> None:
+        original_config = main_module.app_config
+        main_module.app_config = AppConfig()
+        try:
+            asyncio.run(main_module.update_config({"blacklisted_files": ["desktop.ini", "*.tmp"]}))
+            self.assertEqual(main_module.app_config.blacklisted_files, ["desktop.ini", "*.tmp"])
+        finally:
+            main_module.app_config = original_config
 
 
 if __name__ == "__main__":

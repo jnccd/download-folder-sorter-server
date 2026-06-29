@@ -51,6 +51,7 @@ async def update_config(payload: dict) -> JSONResponse:
     app_config.download_folder = payload.get("download_folder", app_config.download_folder)
     app_config.sort_delay_seconds = int(payload.get("sort_delay_seconds", app_config.sort_delay_seconds))
     app_config.rules = [MatchRule(**rule) for rule in payload.get("rules", [])]
+    app_config.blacklisted_files = [str(item) for item in payload.get("blacklisted_files", app_config.blacklisted_files)]
     save_config(app_config, CONFIG_PATH)
     sorter.refresh()
     return JSONResponse(app_config.to_dict())

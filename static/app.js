@@ -9,6 +9,8 @@ async function loadConfig() {
     state.config.download_folder || "";
   document.getElementById("sortDelay").value =
     state.config.sort_delay_seconds || 3;
+  document.getElementById("blacklistedFiles").value =
+    (state.config.blacklisted_files || []).join("\n");
   renderRules();
   void updateStatus();
 }
@@ -43,6 +45,11 @@ async function saveConfig() {
     download_folder: document.getElementById("downloadFolder").value,
     sort_delay_seconds: Number(document.getElementById("sortDelay").value || 3),
     rules: [],
+    blacklisted_files: document
+      .getElementById("blacklistedFiles")
+      .value.split(/\r?\n/)
+      .map((item) => item.trim())
+      .filter(Boolean),
   };
 
   const ruleRows = document.querySelectorAll("#rules .rule");
