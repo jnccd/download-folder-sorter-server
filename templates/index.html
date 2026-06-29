@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Download Folder Sorter</title>
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Download Folder Sorter</h1>
+      <section>
+        <h2>Configuration</h2>
+        <label>
+          Download folder
+          <input id="downloadFolder" type="text" />
+        </label>
+        <label>
+          Sort delay (seconds)
+          <input id="sortDelay" type="number" min="0" value="3" />
+        </label>
+        <button id="saveConfig">Save</button>
+        <button id="sortNow">Sort now</button>
+      </section>
+
+      <section>
+        <h2>Rules</h2>
+        <div class="rule rule-header">
+      <span>Name</span>
+      <span>Match</span>
+      <span>Target</span>
+      <span></span>
+    </div>
+    <div id="rules"></div>
+        <button id="addRule">Add rule</button>
+      </section>
+
+      <section>
+        <h2>Status</h2>
+        <div id="statusBox" class="status-panel">
+          <div class="status-card">
+            <span class="status-label">State</span>
+            <strong id="statusState">Loading...</strong>
+          </div>
+          <div class="status-card">
+            <span class="status-label">Download folder</span>
+            <strong id="statusFolder">—</strong>
+          </div>
+          <div class="status-card">
+            <span class="status-label">Rules</span>
+            <strong id="statusRules">0</strong>
+          </div>
+          <div class="status-card status-card-wide">
+            <span class="status-label">Message</span>
+            <strong id="statusMessage">—</strong>
+          </div>
+          <div class="status-card status-card-wide">
+            <span class="status-label">Recent activity</span>
+            <ul id="statusEvents" class="event-list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
