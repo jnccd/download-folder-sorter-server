@@ -100,6 +100,7 @@ async def update_config(payload: dict) -> JSONResponse:
 
 @app.post("/api/sort")
 async def sort_now() -> JSONResponse:
+    sorter.refresh()
     sorter.run_once()
     return JSONResponse({"status": sorter.status, "message": sorter.last_message})
 

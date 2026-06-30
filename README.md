@@ -109,6 +109,8 @@ You can trigger a manual scan from the UI or by calling the API endpoint:
 curl -X POST http://localhost:8000/api/sort
 ```
 
+Using the UI button also refreshes the filesystem watcher so the folder watcher is rehooked after manual sync.
+
 ## Status and Logs
 
 The UI shows current status and recent events. You can also inspect status from:
