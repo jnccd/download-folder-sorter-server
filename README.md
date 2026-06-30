@@ -1,6 +1,6 @@
 # Download Folder Sorter
 
-> ⚠️ **Warning**: This is a slop project.
+> ⚠️ **Warning**: This is an AI slop project.
 
 A small NAS-friendly Python server that watches a download folder and moves files into target folders based on configurable matching rules. It includes a simple web UI for setup, status, and manual sorting.
 
