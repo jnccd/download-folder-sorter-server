@@ -1,8 +1,12 @@
 import asyncio
+import os
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+from fastapi.testclient import TestClient
 
 import main as main_module
 from app.config import AppConfig, MatchRule
@@ -49,6 +53,16 @@ class SortingTests(unittest.TestCase):
             self.assertEqual(main_module.app_config.blacklisted_files, ["desktop.ini", "*.tmp"])
         finally:
             main_module.app_config = original_config
+
+    def test_ui_requires_basic_auth(self) -> None:
+        with patch.dict(os.environ, {"DOWNLOAD_FOLDER_SORTER_USER": "demo", "DOWNLOAD_FOLDER_SORTER_PASS": "secret"}, clear=False):
+            with TestClient(main_module.app) as client:
+                response = client.get("/")
+                self.assertEqual(response.status_code, 401)
+                self.assertIn("WWW-Authenticate", response.headers)
+
+                authenticated = client.get("/", auth=("demo", "secret"))
+                self.assertEqual(authenticated.status_code, 200)
 
 
 if __name__ == "__main__":

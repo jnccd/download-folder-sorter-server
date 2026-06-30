@@ -39,13 +39,27 @@ A small NAS-friendly Python server that watches a download folder and moves file
    pip install -r requirements.txt
    ```
 
-3. Start the server
+3. Set authentication environment variables
+
+   Windows:
+   ```bash
+   set DOWNLOAD_FOLDER_SORTER_USER=admin
+   set DOWNLOAD_FOLDER_SORTER_PASS=change-me
+   ```
+
+   macOS/Linux:
+   ```bash
+   export DOWNLOAD_FOLDER_SORTER_USER=admin
+   export DOWNLOAD_FOLDER_SORTER_PASS=change-me
+   ```
+
+4. Start the server
 
    ```bash
    python main.py
    ```
 
-4. Open the web UI
+5. Open the web UI
    - Visit http://localhost:8000
 
 ## How It Works
@@ -75,6 +89,15 @@ You can configure:
 - Blacklisted files or patterns
 
 The web UI saves these values automatically.
+
+## Authentication
+
+The app supports simple basic-auth protection for single-user use. Set the following environment variables before starting the server:
+
+- `DOWNLOAD_FOLDER_SORTER_USER`
+- `DOWNLOAD_FOLDER_SORTER_PASS`
+
+When these are configured, every endpoint requires valid basic-auth credentials. Browsers will automatically prompt for the username and password when you visit the web UI.
 
 ## Manual Sort
 
