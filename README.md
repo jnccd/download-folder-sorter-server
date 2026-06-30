@@ -42,12 +42,14 @@ A small NAS-friendly Python server that watches a download folder and moves file
 3. Set authentication environment variables
 
    Windows:
+
    ```bash
    set DOWNLOAD_FOLDER_SORTER_USER=admin
    set DOWNLOAD_FOLDER_SORTER_PASS=change-me
    ```
 
    macOS/Linux:
+
    ```bash
    export DOWNLOAD_FOLDER_SORTER_USER=admin
    export DOWNLOAD_FOLDER_SORTER_PASS=change-me
