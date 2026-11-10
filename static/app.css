@@ -49,6 +49,25 @@ button {
 button.secondary {
   background: #64748b;
 }
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.hint {
+  margin: 0 0 0.9rem;
+  color: #475569;
+  font-size: 0.9rem;
+}
+.notice {
+  margin-left: 0.35rem;
+  font-size: 0.9rem;
+}
+.notice-ok {
+  color: #15803d;
+}
+.notice-error {
+  color: #b91c1c;
+}
 .rule {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 2.2fr) auto;

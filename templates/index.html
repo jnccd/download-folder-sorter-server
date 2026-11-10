@@ -36,11 +36,26 @@
       </section>
 
       <section>
+        <h2>Background service</h2>
+        <p class="hint">
+          If new files stop being sorted, restart the sorting service. It stops
+          the current folder watcher and rehooks a fresh one on the download
+          folder, then scans the backlog.
+        </p>
+        <button id="restartSorter" type="button">Restart sorting service</button>
+        <span id="restartNotice" class="notice" role="status"></span>
+      </section>
+
+      <section>
         <h2>Status</h2>
         <div id="statusBox" class="status-panel">
           <div class="status-card">
             <span class="status-label">State</span>
             <strong id="statusState">Loading...</strong>
+          </div>
+          <div class="status-card">
+            <span class="status-label">Watcher</span>
+            <strong id="statusWatcher">—</strong>
           </div>
           <div class="status-card">
             <span class="status-label">Download folder</span>
@@ -53,6 +68,10 @@
           <div class="status-card status-card-wide">
             <span class="status-label">Message</span>
             <strong id="statusMessage">—</strong>
+          </div>
+          <div class="status-card status-card-wide">
+            <span class="status-label">Last error</span>
+            <strong id="statusError">—</strong>
           </div>
           <div class="status-card status-card-wide">
             <span class="status-label">Recent activity</span>

@@ -77,6 +77,34 @@ async function sortNow() {
   updateStatus();
 }
 
+async function restartSorter() {
+  const button = document.getElementById("restartSorter");
+  const notice = document.getElementById("restartNotice");
+  button.disabled = true;
+  button.textContent = "Restarting…";
+  notice.textContent = "";
+  notice.className = "notice";
+  try {
+    const res = await fetch("/api/restart", { method: "POST" });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const generation = data.watcher_generation ?? data.watcher?.generation;
+    notice.textContent = generation
+      ? `Watcher rehooked as generation ${generation}.`
+      : "Sorting service restarted.";
+    notice.classList.add("notice-ok");
+  } catch (error) {
+    notice.textContent = `Restart failed: ${error.message}`;
+    notice.classList.add("notice-error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Restart sorting service";
+  }
+  void updateStatus();
+}
+
 async function updateStatus() {
   try {
     const res = await fetch("/api/status");
@@ -86,6 +114,19 @@ async function updateStatus() {
       data.download_folder || "—";
     document.getElementById("statusRules").textContent = data.rules ?? 0;
     document.getElementById("statusMessage").textContent = data.message || "—";
+    document.getElementById("statusError").textContent = data.last_error || "—";
+
+    const watcher = data.watcher || {};
+    const watcherParts = [watcher.state || "unknown"];
+    if (watcher.generation) {
+      watcherParts.push(`gen ${watcher.generation}`);
+    }
+    const threads = watcher.threads || {};
+    if (Object.values(threads).some((alive) => !alive)) {
+      watcherParts.push("thread stopped");
+    }
+    document.getElementById("statusWatcher").textContent =
+      watcherParts.join(" · ");
 
     const eventList = document.getElementById("statusEvents");
     eventList.innerHTML = "";
@@ -109,6 +150,7 @@ async function updateStatus() {
 
 document.getElementById("saveConfig").addEventListener("click", saveConfig);
 document.getElementById("sortNow").addEventListener("click", sortNow);
+document.getElementById("restartSorter").addEventListener("click", restartSorter);
 document.getElementById("addRule").addEventListener("click", () => {
   state.config.rules.push({ name: "", match: "", target: "" });
   renderRules();

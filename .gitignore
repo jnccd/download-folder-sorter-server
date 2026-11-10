@@ -13,3 +13,5 @@ env/
 config.json
 *.sqlite3
 .DS_Store
+# scratch folders created by the test suite
+sorter-test-*/

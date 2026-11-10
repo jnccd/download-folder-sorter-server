@@ -100,9 +100,34 @@ async def update_config(payload: dict) -> JSONResponse:
 
 @app.post("/api/sort")
 async def sort_now() -> JSONResponse:
-    sorter.refresh()
     sorter.run_once()
-    return JSONResponse({"status": sorter.status, "message": sorter.last_message})
+    generation = sorter.rehook()
+    return JSONResponse(
+        {
+            "status": sorter.status,
+            "message": sorter.last_message,
+            "watcher_generation": generation,
+            **sorter.health(),
+        }
+    )
+
+
+@app.post("/api/restart")
+async def restart_sorter() -> JSONResponse:
+    """Restart the sorting background service and rehook the folder watcher.
+
+    This is what the "Restart sorting service" button calls after the filesystem
+    watcher stops delivering events on a long-running NAS deployment.
+    """
+    generation = sorter.restart(reason="web request")
+    response = {
+        "status": sorter.status,
+        "message": sorter.last_message,
+        "watcher_generation": generation,
+        "recent_events": sorter.recent_events,
+    }
+    response.update(sorter.health())
+    return JSONResponse(response)
 
 
 @app.get("/api/status")
@@ -114,6 +139,7 @@ async def get_status() -> JSONResponse:
             "recent_events": sorter.recent_events,
             "download_folder": app_config.download_folder,
             "rules": len(app_config.rules),
+            **sorter.health(),
         }
     )
 

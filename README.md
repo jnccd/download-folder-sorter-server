@@ -13,6 +13,9 @@ A small NAS-friendly Python server that watches a download folder and moves file
 - Includes a browser-based interface for configuration and status
 - Supports a configurable sort delay and startup scan
 - Allows blacklisting files or patterns that should never be moved
+- Includes a **Restart sorting service** button that rehooks the folder watcher
+  and rescans the backlog when a long-running server stops sorting
+- Revives the background threads automatically if one of them dies
 
 ## Requirements
 
@@ -110,6 +113,54 @@ curl -X POST http://localhost:8000/api/sort
 ```
 
 Using the UI button also refreshes the filesystem watcher so the folder watcher is rehooked after manual sync.
+
+## Restarting the Sorting Service
+
+A server that runs for weeks can stop sorting even though it is still responding:
+the NAS share gets remounted, the OS drops the folder watch (`inotify` on Linux,
+`ReadDirectoryChangesW` on Windows, FSEvents on macOS), or the background worker
+thread exits after an unexpected error. In that state the UI still loads but new
+files are never picked up.
+
+Press **Restart sorting service** in the UI (section *Background service*), or call:
+
+```bash
+curl -X POST http://localhost:8000/api/restart
+```
+
+The restart:
+
+- stops the worker, the folder watcher and the supervisor thread,
+- starts a fresh generation of them and rehooks a new OS-level folder watch,
+- clears the old event debounce and scans the download folder once, so files that
+  arrived while nothing was watching are sorted without waiting for the next event,
+- keeps a single scan in flight at a time, so a file is never moved twice.
+
+The response lists the new watcher generation and the state of every background thread:
+
+```json
+{
+  "message": "Sorting service restarted; folder watcher rehooked",
+  "watcher_generation": 4,
+  "watcher": {
+    "state": "watching",
+    "generation": 4,
+    "threads": { "worker": true, "watcher": true, "supervisor": true }
+  },
+  "last_error": ""
+}
+```
+
+Watcher states reported by `/api/status`:
+
+- `watching` — the folder watch is active
+- `waiting-for-folder` — the download folder does not exist yet (for example the NAS share is not mounted)
+- `retrying` / `rehooking` — the watch failed or ended and is being re-created
+- `stopped` — the service is stopped
+
+A supervisor thread checks every couple of seconds and restarts the service on its
+own if the worker or watcher disappears, so a crash recovers without the button.
+`last_error` shows the most recent failure, if any.
 
 ## Status and Logs
 
